@@ -1,7 +1,7 @@
 from dataclasses import fields
 from django.forms import SlugField
 from rest_framework import serializers
-from drones.models import DronesCategory, Drone,Competition,Pilote
+from apps.drones.models import DronesCategory, Drone,Competition,Pilote
 
 class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
     drones = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='drone-detail')
@@ -11,7 +11,7 @@ class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DroneSerializer(serializers.HyperlinkedModelSerializer):
-    drone_category = serializers.SlugRelatedField(queryset=DronesCategory.objects.all(),SlugField='name')
+    drone_category = serializers.SlugRelatedField(queryset=DronesCategory.objects.all(), slug_field='name')
     class Meta:
         model = Drone
         fields = (
@@ -33,13 +33,13 @@ class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
 
 class PilotSerializer(serializers.HyperlinkedModelSerializer):
     competitions = CompetitionSerializer(many=True, read_only=True)
-    gender = serializers.ChoiceField(choices=Pilot.GENDER_CHOICES)
+    gender = serializers.ChoiceField(choices=Pilote.GENDER_CHOICES)
     gender_description = serializers.CharField(
         source="get_gender_display", read_only=True
     )
 
     class Meta:
-        model = Pilot
+        model = Pilote
         fields = (
             "url",
             "name",
